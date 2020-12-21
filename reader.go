@@ -55,7 +55,7 @@ func (r *Reader) Bool(name string, defaultValue ...bool) (ret bool) {
 
 	ret, err := strconv.ParseBool(value)
 	if err != nil {
-		r.addError(name, err)
+		r.AddError(name, err)
 		return
 	}
 	return
@@ -75,7 +75,7 @@ func (r *Reader) Int(name string, defaultValue ...int) (ret int) {
 
 	ret, err := strconv.Atoi(value)
 	if err != nil {
-		r.addError(name, err)
+		r.AddError(name, err)
 		return
 	}
 	return
@@ -95,7 +95,7 @@ func (r *Reader) Duration(name string, defaultValue ...time.Duration) (ret time.
 
 	ret, err := time.ParseDuration(value)
 	if err != nil {
-		r.addError(name, err)
+		r.AddError(name, err)
 		return
 	}
 	return
@@ -103,7 +103,7 @@ func (r *Reader) Duration(name string, defaultValue ...time.Duration) (ret time.
 
 func (r *Reader) moreThanOneError(name string, numDefaults int) bool {
 	if numDefaults > 1 {
-		r.addErrorf(name, "more than one default value")
+		r.AddErrorf(name, "more than one default value")
 		return true
 	}
 	return false
@@ -111,20 +111,20 @@ func (r *Reader) moreThanOneError(name string, numDefaults int) bool {
 
 func (r *Reader) noDefaultError(name string, numDefaults int) bool {
 	if numDefaults == 0 {
-		r.addErrorf(name, "no value set")
+		r.AddErrorf(name, "no value set")
 		return true
 	}
 	return false
 }
 
-func (r *Reader) addError(name string, err error) {
+func (r *Reader) AddError(name string, err error) {
 	if err != nil {
 		r.errs = append(r.errs, EnvError{Name: r.prefix + name, Err: err})
 	}
 }
 
-func (r *Reader) addErrorf(name string, format string, args ...interface{}) {
-	r.addError(name, fmt.Errorf(format, args...))
+func (r *Reader) AddErrorf(name string, format string, args ...interface{}) {
+	r.AddError(name, fmt.Errorf(format, args...))
 }
 
 func (r *Reader) Err() error {

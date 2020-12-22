@@ -23,17 +23,17 @@ func NewReader(prefix string) *Reader {
 	return &Reader{prefix: prefix}
 }
 
-func (r *Reader) env(name string) (string, bool) {
+func (r *Reader) Env(name string) (string, bool) {
 	return os.LookupEnv(r.prefix + name)
 }
 
 func (r *Reader) String(name string, defaultValue ...string) (ret string) {
-	if r.moreThanOneError(name, len(defaultValue)) {
+	if r.MoreThanOneError(name, len(defaultValue)) {
 		return
 	}
-	value, ok := r.env(name)
+	value, ok := r.Env(name)
 	if !ok {
-		if r.noDefaultError(name, len(defaultValue)) {
+		if r.NoDefaultError(name, len(defaultValue)) {
 			return
 		}
 		return defaultValue[0]
@@ -42,12 +42,12 @@ func (r *Reader) String(name string, defaultValue ...string) (ret string) {
 }
 
 func (r *Reader) Bool(name string, defaultValue ...bool) (ret bool) {
-	if r.moreThanOneError(name, len(defaultValue)) {
+	if r.MoreThanOneError(name, len(defaultValue)) {
 		return
 	}
-	value, ok := r.env(name)
+	value, ok := r.Env(name)
 	if !ok {
-		if r.noDefaultError(name, len(defaultValue)) {
+		if r.NoDefaultError(name, len(defaultValue)) {
 			return
 		}
 		return defaultValue[0]
@@ -62,12 +62,12 @@ func (r *Reader) Bool(name string, defaultValue ...bool) (ret bool) {
 }
 
 func (r *Reader) Int(name string, defaultValue ...int) (ret int) {
-	if r.moreThanOneError(name, len(defaultValue)) {
+	if r.MoreThanOneError(name, len(defaultValue)) {
 		return
 	}
-	value, ok := r.env(name)
+	value, ok := r.Env(name)
 	if !ok {
-		if r.noDefaultError(name, len(defaultValue)) {
+		if r.NoDefaultError(name, len(defaultValue)) {
 			return
 		}
 		return defaultValue[0]
@@ -82,12 +82,12 @@ func (r *Reader) Int(name string, defaultValue ...int) (ret int) {
 }
 
 func (r *Reader) Duration(name string, defaultValue ...time.Duration) (ret time.Duration) {
-	if r.moreThanOneError(name, len(defaultValue)) {
+	if r.MoreThanOneError(name, len(defaultValue)) {
 		return
 	}
-	value, ok := r.env(name)
+	value, ok := r.Env(name)
 	if !ok {
-		if r.noDefaultError(name, len(defaultValue)) {
+		if r.NoDefaultError(name, len(defaultValue)) {
 			return
 		}
 		return defaultValue[0]
@@ -101,7 +101,7 @@ func (r *Reader) Duration(name string, defaultValue ...time.Duration) (ret time.
 	return
 }
 
-func (r *Reader) moreThanOneError(name string, numDefaults int) bool {
+func (r *Reader) MoreThanOneError(name string, numDefaults int) bool {
 	if numDefaults > 1 {
 		r.AddErrorf(name, "more than one default value")
 		return true
@@ -109,7 +109,7 @@ func (r *Reader) moreThanOneError(name string, numDefaults int) bool {
 	return false
 }
 
-func (r *Reader) noDefaultError(name string, numDefaults int) bool {
+func (r *Reader) NoDefaultError(name string, numDefaults int) bool {
 	if numDefaults == 0 {
 		r.AddErrorf(name, "no value set")
 		return true
